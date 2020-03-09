@@ -2,7 +2,8 @@ package com.example.androidlabs;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
+import android.widget.CompoundButton;
 import android.widget.Button;
 import android.view.View;
 import android.os.Bundle;
@@ -24,19 +25,17 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast toast=Toast.makeText(getApplicationContext(),"@string/toast_message",Toast.LENGTH_LONG);
+                Toast toast=Toast.makeText(getApplicationContext(),getString (R. string.toast_message),Toast.LENGTH_LONG);
                 toast.show();
             }
         });
 
+        CompoundButton cb = (CheckBox)findViewById( R.id.checkBox);
+        //boolean b = cb.isChecked();
+        cb.setOnCheckedChangeListener((v,b)->{
+            Snackbar snackbar = Snackbar.make(findViewById( R.id.checkBox), getString (R. string.snack_message), Snackbar.LENGTH_LONG);
 
-
-        CheckBox cb = (CheckBox)findViewById( R.id.checkBox);
-        boolean b = cb.isChecked();
-        cb.setOnCheckChangedListener((cb, b)->{
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, "@string/snack_message", Snackbar.LENGTH_LONG);
-            Snackbar.setAction( "Undo", click -> cb.setChecked(!b));
+            snackbar.setAction( "Undo", click -> cb.setChecked(!b));
             snackbar.show(); } );
 
 
