@@ -6,4 +6,6 @@
     <string name="SwitchText">Switch on/off</string>
     <string name="LabTwoText">Look at my GUI!</string>
     <string name="EditText">Type here</string>
+    <string name="toast_message">Here is more information</string>
+    <string name="snack_message">you checked a box</string>
 </resources>
