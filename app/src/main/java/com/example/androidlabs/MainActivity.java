@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,8 +20,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = getSharedPreferences("prefs.txt", Context.MODE_PRIVATE);
+        final EditText email = (EditText) findViewById(R.id.editText5);
+        email.setText(prefs.getString("emailAddress","????"));
 
-        setContentView(R.layout.activity_main_relative);
+        setContentView(R.layout.activity_main_lab3);
+
+
+
 
         Button button = (Button) findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
@@ -33,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
         CompoundButton cb = (CheckBox)findViewById( R.id.checkBox);
         //boolean b = cb.isChecked();
         cb.setOnCheckedChangeListener((v,b)->{
-            Snackbar snackbar = Snackbar.make(findViewById( R.id.checkBox), getString (R. string.snack_message), Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(v, getString (R. string.snack_message), Snackbar.LENGTH_LONG);
 
             snackbar.setAction( "Undo", click -> cb.setChecked(!b));
             snackbar.show(); } );
 
 
         //Context context = getActivity();
-        SharedPreferences prefs = getSharedPreferences("prefs.txt", Context.MODE_PRIVATE);
+
 
     }
 
@@ -48,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        SharedPreferences prefs = getSharedPreferences("prefs.txt", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        EditText email = (EditText) findViewById(R.id.editText5);
+        editor.putString(email.getText().toString(), "emailAddress");
+        editor.apply();
+        editor.commit();
+
 
     }
 
