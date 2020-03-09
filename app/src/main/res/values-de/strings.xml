@@ -9,4 +9,10 @@
     <string name="EditText">Type here</string>
     <string name="toast_message">Here is more information</string>
     <string name="snack_message">you checked a box</string>
+    <string name="name">Your name:</string>
+    <string name="email">Your email:</string>
+    <string name="l3name">Enter your name</string>
+    <string name="l3email">Enter your email</string>
+    <string name="picture">Your picture:</string>
+    <string name="pictureButton">Click the above button to take a picture</string>
 </resources>

@@ -3,6 +3,9 @@ package com.example.androidlabs;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import android.content.Intent;
+import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Button;
 import android.view.View;
@@ -13,22 +16,33 @@ import android.preference.PreferenceManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String ACTIVITY_NAME = "PROFILE_ACTIVITY";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(ACTIVITY_NAME, "In function:" + "main oncreate");
+
+
         SharedPreferences prefs = getSharedPreferences("prefs.txt", Context.MODE_PRIVATE);
-        final EditText email = (EditText) findViewById(R.id.editText5);
-        email.setText(prefs.getString("emailAddress","????"));
 
         setContentView(R.layout.activity_main_lab3);
+        EditText email = (EditText) findViewById(R.id.editText5);
+        email.setText(prefs.getString("EMAIL",""));
+
+        Button login = (Button) findViewById(R.id.button5);
+        login.setOnClickListener ( bt -> {
+            Intent goToProfile = new Intent(MainActivity.this, ProfileActivity.class);
+            goToProfile.putExtra("EMAIL",email.getText().toString());
+            startActivity(goToProfile);
+        });
 
 
 
-
+/*
         Button button = (Button) findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -47,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Context context = getActivity();
-
+*/
 
     }
 
@@ -55,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        Log.e(ACTIVITY_NAME, "In function:" + "main onpause");
         SharedPreferences prefs = getSharedPreferences("prefs.txt", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         EditText email = (EditText) findViewById(R.id.editText5);
-        editor.putString(email.getText().toString(), "emailAddress");
+        editor.putString(email.getText().toString(), "EMAIL");
         editor.apply();
         editor.commit();
 
