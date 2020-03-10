@@ -40,8 +40,8 @@ public class WeatherForecast extends AppCompatActivity {
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-
-
+        ForecastQuery req = new ForecastQuery();
+        req.execute();
 
     }
 
@@ -88,13 +88,13 @@ public class WeatherForecast extends AppCompatActivity {
                         {
                             //If you get here, then you are pointing to a <Weather> start tag
                             temp = xpp.getAttributeValue(null,    "value");
-                            onProgressUpdate(20);
+                            publishProgress(20);
 
                              minTemp = xpp.getAttributeValue(null, "min");
-                            onProgressUpdate(40);
+                            publishProgress(40);
 
                              maxTemp = xpp.getAttributeValue(null, "max");
-                            onProgressUpdate(60);
+                            publishProgress(60);
 
                         }
 /*
@@ -143,7 +143,7 @@ public class WeatherForecast extends AppCompatActivity {
                 String result = sb.toString();
                 JSONObject uv = new JSONObject(result);
                 uvRate = uv.getDouble("value");
-                onProgressUpdate(80);
+                publishProgress(80);
 
             }catch(IOException | JSONException ex ){
                 Log.e("Error", ex.getMessage());
@@ -178,7 +178,7 @@ public class WeatherForecast extends AppCompatActivity {
 
                 outputStream.flush();
                 outputStream.close();
-                onProgressUpdate(100);
+                publishProgress(100);
             }catch(IOException ex ){
                 Log.e("Error", ex.getMessage());
             }*/
@@ -190,9 +190,9 @@ public class WeatherForecast extends AppCompatActivity {
             return file.exists();   }
 
 
-        public void onProgressUpdate(int a){
+        public void onProgressUpdate(Integer ... a){
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-            progressBar.setProgress(a);
+            progressBar.setProgress(a[0]);
         }
 
         protected void onPostExecute(String fromDoInBackground) {
