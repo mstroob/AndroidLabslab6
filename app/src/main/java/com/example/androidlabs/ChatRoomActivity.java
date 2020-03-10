@@ -13,25 +13,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.app.AlertDialog;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
-    public ArrayList<Message> messageList = new ArrayList<>();
+    private ArrayList<Message> messageList = new ArrayList<>(Arrays.asList(new Message("hi",false)));
+    private MyListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
-        ListView myList = (ListView) findViewById(R.id.listView);
-        MyListAdapter adapter = new MyListAdapter();
-        myList.setAdapter(adapter);
-
-
-
-
-
-
 
         Button sendButton = (Button)findViewById(R.id.sendButton);
         sendButton.setOnClickListener ( bt -> {
@@ -48,6 +42,10 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         });
 
+
+        ListView myList = (ListView) findViewById(R.id.listView);
+        myList.setAdapter(adapter = new MyListAdapter());
+
         myList.setOnItemLongClickListener (new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,int pos, long id) {
@@ -63,25 +61,20 @@ public class ChatRoomActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
     private class MyListAdapter extends BaseAdapter {
 
-        private MyListAdapter(){
-            super();
+
+        public int getCount(){
+            return messageList.size();
         }
 
-        @Override
-        public int getCount() {
-            return (messageList.size());
-        }
-
-        @Override
         public Object getItem(int position) {
            return (messageList.get(position));
         }
 
-        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View newView = new View(null);
             if (messageList.get(position).isSent()) {
@@ -94,7 +87,6 @@ public class ChatRoomActivity extends AppCompatActivity {
             return newView;
         }
 
-        @Override
         public long getItemId(int position) {
             return position;
         }
