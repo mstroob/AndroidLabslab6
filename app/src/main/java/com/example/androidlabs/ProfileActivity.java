@@ -38,9 +38,12 @@ public class ProfileActivity extends AppCompatActivity {
         Button chatButton = (Button)findViewById(R.id.button2);
         chatButton.setOnClickListener ( bt -> {
             Intent goToChat = new Intent(ProfileActivity.this, ChatRoomActivity.class);
-            //goToProfile.putExtra("EMAIL",email.getText().toString());
             startActivity(goToChat);  });
 
+        Button forecastButton = (Button)findViewById(R.id.button6);
+        chatButton.setOnClickListener ( bt -> {
+            Intent goToForecast = new Intent(ProfileActivity.this, WeatherForecast.class);
+            startActivity(goToForecast);  });
 
 
 
