@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class WeatherForecast extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
 
-            String urlString = "http://api.openweathermap.org/data/2.5/weather?q=ottawa,ca&APPID=7e943c97096a9784391a981c4d878b22&mode=xml&units=metric";
+            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=ottawa,ca&APPID=7e943c97096a9784391a981c4d878b22&mode=xml&units=metric";
             try {
                 URL url = new URL(urlString);
 
@@ -97,21 +98,7 @@ public class WeatherForecast extends AppCompatActivity {
                             publishProgress(60);
 
                         }
-/*
-                        else if(xpp.getName().equals("AMessage"))
-                        {
-                            parameter = xpp.getAttributeValue(null, "message"); // this will run for <AMessage message="parameter" >
-                        }
-                        else if(xpp.getName().equals("Weather"))
-                        {
-                            parameter = xpp.getAttributeValue(null, "outlook"); //this will run for <Weather outlook="parameter"
-                            parameter = xpp.getAttributeValue(null, "windy"); //this will run for <Weather windy="paramter"  >
-                        }
-                        else if(xpp.getName().equals("Temperature"))
-                        {
-                            xpp.next(); //move the pointer from the opening tag to the TEXT event
-                            parameter = xpp.getText(); // this will return  20
-                        }*/
+
                     }
                     eventType = xpp.next(); //move to the next xml event and store it in a variable
                 }
@@ -121,13 +108,12 @@ public class WeatherForecast extends AppCompatActivity {
             }
 
 
-            urlString = "http://api.openweathermap.org/data/2.5/uvi?appid=7e943c97096a9784391a981c4d878b22&lat=45.348945&lon=-75.759389";
+            urlString = "https://api.openweathermap.org/data/2.5/uvi?appid=7e943c97096a9784391a981c4d878b22&lat=45.348945&lon=-75.759389";
             try {
                 URL url = new URL(urlString);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-                connection.connect();
                 InputStream res = connection.getInputStream();
 
                 BufferedReader reader = new BufferedReader( new InputStreamReader( res, "UTF-8"), 8);
@@ -136,11 +122,10 @@ public class WeatherForecast extends AppCompatActivity {
                 String line = null;
 
                 while ((line =reader.readLine()) != null){
-                    sb.append(line = "\n");
+                    sb.append(line + "\n");
                 }
-
-
                 String result = sb.toString();
+
                 JSONObject uv = new JSONObject(result);
                 uvRate = uv.getDouble("value");
                 publishProgress(80);
@@ -151,37 +136,44 @@ public class WeatherForecast extends AppCompatActivity {
 
 
 
-/*
-            String iconName = "rainy";
-            urlString = "http://openweathermap.org/img/w/" + iconName + ".png";
+
+            String iconName = "04d@2x";
+            urlString = "https://openweathermap.org/img/wn/" + iconName + ".png";
             image = null;
             try {
             URL url = new URL(urlString);
 
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                int responseCode = connection.getResponseCode();
-                if (responseCode == 200) {
-                    image = BitmapFactory.decodeStream(connection.getInputStream());
+                String imageFile = iconName + ".png";
+                if (fileExistance (imageFile)){
+                    FileInputStream fis = null;
+                    try {    fis = openFileInput(imageFile);   }
+                    catch (FileNotFoundException e) {    e.printStackTrace();  }
+                    image = BitmapFactory.decodeStream(fis);
+                    Log.e("WeatherForecastActivity","Image file existed");
+
+                    publishProgress(100);
+                }else {
+
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode == 200) {
+                        image = BitmapFactory.decodeStream(connection.getInputStream());
+                    }
+
+
+                    FileOutputStream outputStream = openFileOutput(imageFile, Context.MODE_PRIVATE);
+                    image.compress(Bitmap.CompressFormat.PNG, 80, outputStream);
+                    Log.e("WeatherForecastActivity","Image file downloaded");
+
+                    publishProgress(100);
+                    outputStream.flush();
+                    outputStream.close();
                 }
 
-                //String imageFile = iconName + ".png";
-
-                FileOutputStream outputStream = openFileOutput(iconName + ".png", Context.MODE_PRIVATE);
-                image.compress(Bitmap.CompressFormat.PNG, 80, outputStream);
-
-                FileInputStream fis = null;
-                try {    fis = openFileInput(imagefile);   }
-                catch (FileNotFoundException e) {    e.printStackTrace();  }
-                Bitmap bm = BitmapFactory.decodeStream(fis);
-
-
-                outputStream.flush();
-                outputStream.close();
-                publishProgress(100);
             }catch(IOException ex ){
                 Log.e("Error", ex.getMessage());
-            }*/
+            }
             return "done";
         }
 
@@ -203,12 +195,15 @@ public class WeatherForecast extends AppCompatActivity {
             TextView minView = (TextView) findViewById(R.id.minTemp);
             TextView maxView = (TextView) findViewById(R.id.maxTemp);
             TextView uvView = (TextView) findViewById(R.id.uv);
+            ImageView dayView = (ImageView) findViewById(R.id.imageView2);
 
-            tempView.setText(temp);
-            minView.setText(minTemp);
-            maxView.setText(maxTemp);
-            uvView.setText(Double.toString(uvRate));
+            String uvtemp = Double.toString(uvRate);
 
+            tempView.setText("Current tempurature: "+temp+"  ");
+            minView.setText("Minimum tempurature: "+minTemp+"  ");
+            maxView.setText("Maximum tempurature: "+maxTemp+"  ");
+            uvView.setText("UV index: "+uvtemp+"  ");
+            dayView.setImageBitmap(image);
 
             Log.i ("HTTP", fromDoInBackground);
 
