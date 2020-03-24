@@ -7,6 +7,7 @@ public class Message {
 
     private String message;
     private boolean sent;
+    private long id;
 
     Message(){
         this("",false);
@@ -17,6 +18,13 @@ public class Message {
         setSent(sent);
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public void setMessage(String message) {
         this.message = message;

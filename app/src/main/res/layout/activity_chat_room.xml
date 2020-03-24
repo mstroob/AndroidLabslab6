@@ -37,7 +37,7 @@
         android:layout_toLeftOf="@+id/recieveButton"
         android:layout_toEndOf="@+id/sendButton"
         android:layout_toRightOf="@+id/sendButton"
-        android:text="Type here"/>
+        android:hint="Type here"/>
 
     <Button
         android:text="Recieve"

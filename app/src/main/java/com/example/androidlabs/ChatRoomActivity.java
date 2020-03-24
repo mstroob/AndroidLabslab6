@@ -32,7 +32,9 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
-
+        MessageDAL printer = new MessageDAL();
+        printer.printCursor(getApplicationContext());
+        messageList = printer.getALl(getApplicationContext());
 
         ListView myList = (ListView) findViewById(R.id.listView);
         adapter= new MyListAdapter(messageList,ChatRoomActivity.this);
@@ -41,14 +43,23 @@ public class ChatRoomActivity extends AppCompatActivity {
         Button sendButton = (Button)findViewById(R.id.sendButton);
         sendButton.setOnClickListener ( bt -> {
             EditText chatText = (EditText) findViewById(R.id.chatText);
-            messageList.add( new Message(chatText.getText().toString(),true));
+            Message message =new Message(chatText.getText().toString(),true);
+            MessageDAL adder = new MessageDAL();
+            adder.addMessage(getApplicationContext(),message);
+            chatText.getText().clear();
+            messageList.add(message);
             adapter.notifyDataSetChanged();
         });
 
         Button recieveButton = (Button)findViewById(R.id.recieveButton);
         recieveButton.setOnClickListener ( bt -> {
             EditText chatText = (EditText) findViewById(R.id.chatText);
-            messageList.add( new Message(chatText.getText().toString(),false));
+
+            Message message =new Message(chatText.getText().toString(),false);
+            MessageDAL adder = new MessageDAL();
+            adder.addMessage(getApplicationContext(),message);
+            chatText.getText().clear();
+            messageList.add( message);
             adapter.notifyDataSetChanged();
 
         });
@@ -58,8 +69,10 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,int pos, long id) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChatRoomActivity.this);
-                alertDialogBuilder.setMessage("Do you want to delete this? \nThe selected row is: " + pos + "\nThe database id is: " + "null");
+                alertDialogBuilder.setMessage("Do you want to delete this? \nThe selected row is: " + (pos+1) + "\nThe database id is: " + messageList.get(pos).getId());
                 alertDialogBuilder.setPositiveButton("Delete", (click, arg) -> {
+                    MessageDAL remover = new MessageDAL();
+                    remover.removeMessage(getApplicationContext(),messageList.get(pos));
                     messageList.remove(pos);
                     adapter.notifyDataSetChanged();
                 });
